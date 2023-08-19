@@ -13,7 +13,7 @@ load_dotenv()
 
 # Confluent Cloud configuration
 source_topic = 'mqtt-geo-data'
-cloud_bootstrap_servers = 'pkc-p11xm.us-east-1.aws.confluent.cloud:9092'
+cloud_bootstrap_servers = os.environ.get('CLOUD_BOOTSTRAP_SERVERS')
 cloud_api_key = os.environ.get('CLOUD_API_KEY_2')
 cloud_api_secret = os.environ.get('CLOUD_API_SECRET_2')
 cloud_group_id = 'cloud_consumer_group'
