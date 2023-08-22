@@ -40,7 +40,6 @@ consumer_conf = {
 def consume_and_print():
     consumer = Consumer(consumer_conf)
     consumer.subscribe([source_topic])
-    print("loop started")
     try:
         while True:
             msg = consumer.poll(10)  # Poll for a message
