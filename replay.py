@@ -3,6 +3,7 @@ from confluent_kafka.admin import AdminClient, NewTopic
 import time
 import logging
 import os
+import uuid
 
 #Loading env variables
 from dotenv import load_dotenv
@@ -27,7 +28,7 @@ source_topic = os.environ.get('SOURCE_TOPIC_CONFLUENT')
 cloud_bootstrap_servers = os.environ.get('CLOUD_BOOTSTRAP_SERVERS')
 cloud_api_key = os.environ.get('CLOUD_API_KEY')
 cloud_api_secret = os.environ.get('CLOUD_API_SECRET')
-cloud_group_id = 'cloud_consumer_group_123'
+cloud_group_id = uuid.uuid1()
 
 # Create a Kafka consumer from Confluent Cloud
 consumer_config = {
