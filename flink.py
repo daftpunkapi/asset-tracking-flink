@@ -5,7 +5,8 @@ from pyflink.common import WatermarkStrategy, SimpleStringSchema
 import logging, sys
 
 def read_from_kafka(env):
-    kafka_source = KafkaSource.builder() \
+    kafka_source = KafkaSource \
+    .builder() \
     .set_bootstrap_servers("localhost:9092") \
     .set_topics("mqtt-replay") \
     .set_group_id("my-group") \
