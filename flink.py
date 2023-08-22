@@ -5,7 +5,7 @@ from pyflink.common import WatermarkStrategy, SimpleStringSchema
 import logging, sys
 
 def read_from_kafka(env):
-    source = KafkaSource.builder() \
+    kafka_source = KafkaSource.builder() \
     .set_bootstrap_servers("localhost:9092") \
     .set_topics("mqtt-replay") \
     .set_group_id("my-group") \
@@ -14,7 +14,7 @@ def read_from_kafka(env):
     .build()
 
     # env.from_source(source, WatermarkStrategy.no_watermarks(), "Kafka Source")
-    env.add_source(source).print()
+    env.add_source(kafka_source).print()
     env.execute()
 
 if __name__ == '__main__':
@@ -27,4 +27,3 @@ if __name__ == '__main__':
 
     print("Start reading data from kafka: ")
     read_from_kafka(env)
-    env.add_source
