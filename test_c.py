@@ -16,7 +16,7 @@ source_topic = 'mqtt-geo-data'
 cloud_bootstrap_servers = os.environ.get('CLOUD_BOOTSTRAP_SERVERS')
 cloud_api_key = os.environ.get('CLOUD_API_KEY_2')
 cloud_api_secret = os.environ.get('CLOUD_API_SECRET_2')
-cloud_group_id = 'cloud_consumer_group'
+cloud_group_id = 'cloud_consumer_group_3'
 
 # Create a Kafka consumer
 consumer_conf = {

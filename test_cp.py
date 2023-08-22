@@ -23,7 +23,7 @@ source_topic = os.environ.get('SOURCE_TOPIC_CONFLUENT')
 cloud_bootstrap_servers = os.environ.get('CLOUD_BOOTSTRAP_SERVERS')
 cloud_api_key = os.environ.get('CLOUD_API_KEY')
 cloud_api_secret = os.environ.get('CLOUD_API_SECRET')
-cloud_group_id = 'cloud_consumer_group'
+cloud_group_id = 'cloud_consumer_group_3'
 
 # Create a Kafka consumer from Confluent Cloud
 consumer_config = {
@@ -56,7 +56,7 @@ try:
             continue
 
         # Wait for two seconds
-        time.sleep(2)
+        time.sleep(0.2)
 
         # Stream the message to the destination topic
         producer.produce(destination_topic, key=msg.key(), value=msg.value(), partition=msg.partition())
