@@ -1,8 +1,7 @@
 ### Create virtual environment for python
 
 ` python3 -m venv {name}`
-
-# pip
+`source {name}/bin/activate`
 
 ### A. Upgrade pip3 first
 
