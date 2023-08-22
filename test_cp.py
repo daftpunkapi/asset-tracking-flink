@@ -12,7 +12,7 @@ load_dotenv()
 destination_topic = os.environ.get('DESTINATION_TOPIC')
 bootstrap_local = os.environ.get('BOOTSTRAP_LOCAL')
 admin_client = AdminClient({'bootstrap.servers': bootstrap_local})
-group_id = 'local_consumer_group'
+# group_id = 'local_consumer_group'
 
 # Creating new topic in local Kafka cluster
 new_topic = NewTopic(destination_topic, num_partitions = 6, replication_factor = 1)

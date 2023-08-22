@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 # Local Kafka configuration
 destination_topic = os.environ.get('DESTINATION_TOPIC')
 bootstrap_local = os.environ.get('BOOTSTRAP_LOCAL')
-group_id = 'local_consumer_group'
+# group_id = 'local_consumer_group'
 
 # Creating new topic in local Kafka cluster
 admin_client = AdminClient({'bootstrap.servers': bootstrap_local})
@@ -27,7 +27,7 @@ source_topic = os.environ.get('SOURCE_TOPIC_CONFLUENT')
 cloud_bootstrap_servers = os.environ.get('CLOUD_BOOTSTRAP_SERVERS')
 cloud_api_key = os.environ.get('CLOUD_API_KEY')
 cloud_api_secret = os.environ.get('CLOUD_API_SECRET')
-cloud_group_id = 'cloud_consumer_group'
+cloud_group_id = 'cloud_consumer_group_123'
 
 # Create a Kafka consumer from Confluent Cloud
 consumer_config = {
@@ -45,13 +45,14 @@ producer_config = {
     'bootstrap.servers': bootstrap_local
 }
 
+producer = Producer(producer_config)
+
+consumer = Consumer(consumer_config)
+consumer.subscribe([source_topic])
+
 # Polling data from Cloud and sending it to local cluster every 2 seconds
 def main():
-    consumer = Consumer(consumer_config)
-    producer = Producer(producer_config)
-
     try:
-        consumer.subscribe([source_topic])
         logger.info(" Subscribed to source topic => %s", source_topic)
 
         while True:
@@ -74,8 +75,7 @@ def main():
                     destination_topic,
                     key=msg.key(),
                     value=msg.value(),
-                    partition=msg.partition,
-                    timestamp=msg.timestamp()
+                    partition=msg.partition()
                 )
                 producer.flush()
                 logger.info(
@@ -85,7 +85,7 @@ def main():
                 )
 
                 # Sleep for 2 seconds
-                time.sleep(2)
+                time.sleep(0.2)
 
             except Exception as e:
                 logger.error("Producer error: %s", str(e))
