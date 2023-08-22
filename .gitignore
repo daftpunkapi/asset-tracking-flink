@@ -1,3 +1,4 @@
 flink/
+myenv/
 /.env
 /.DS_Store

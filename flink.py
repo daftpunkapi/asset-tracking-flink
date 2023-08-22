@@ -9,9 +9,9 @@ def read_from_kafka(env):
     .builder() \
     .set_bootstrap_servers("localhost:9092") \
     .set_topics("mqtt-replay") \
+    .set_value_only_deserializer(SimpleStringSchema()) \
     .set_group_id("my-group") \
     .set_starting_offsets(KafkaOffsetsInitializer.earliest()) \
-    .set_value_only_deserializer(SimpleStringSchema()) \
     .build()
 
     # env.from_source(source, WatermarkStrategy.no_watermarks(), "Kafka Source")
