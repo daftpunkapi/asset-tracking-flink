@@ -1,30 +1,32 @@
-from pyflink.common import Types
+from pyflink.common.typeinfo import Types
+from pyflink.common import SimpleStringSchema
 from pyflink.datastream import StreamExecutionEnvironment
-from pyflink.datastream.connectors.kafka import KafkaSource, KafkaOffsetsInitializer
-from pyflink.common import WatermarkStrategy, SimpleStringSchema
-import logging, sys
+from pyflink.datastream.connectors.kafka import FlinkKafkaConsumer
+from pyflink.datastream.formats.json import JsonRowDeserializationSchema
 
-def read_from_kafka(env):
-    kafka_source = KafkaSource \
-    .builder() \
-    .set_bootstrap_servers("localhost:9092") \
-    .set_topics("mqtt-replay") \
-    .set_value_only_deserializer(SimpleStringSchema()) \
-    .set_group_id("my-group") \
-    .set_starting_offsets(KafkaOffsetsInitializer.earliest()) \
-    .build()
+env = StreamExecutionEnvironment.get_execution_environment()
+# env.add_jars("file:///Users/karanbawejapro/Desktop/jarfiles/flink-sql-connector-kafka-1.17.1.jar")
+env.add_jars("file:///Users/Raghav/Desktop/DaftPunk/Resources/flink-sql-connector-kafka-1.17.1.jar")
 
-    # env.from_source(source, WatermarkStrategy.no_watermarks(), "Kafka Source")
-    env.add_source(kafka_source).print()
-    env.execute()
+# deserialization_schema = (
+#     JsonRowDeserializationSchema.builder().type_info(
+#         type_info=Types.ROW([Types.STRING(), Types.STRING(), Types.STRING()])
+#     )
+#     # .ignore_parse_errors()
+#     .build()
+# )
 
-if __name__ == '__main__':
-    # logging.basicConfig(stream=sys.stdout, level=logging.INFO, format="%(message)s")
+kafka_consumer = FlinkKafkaConsumer(
+    topics="mqtt-replay",
+    deserialization_schema=SimpleStringSchema(),
+    properties={
+        "bootstrap.servers": "localhost:9092",
+        "group.id": "test_group8",
+        "auto.offset.reset": "earliest",
+    },
+)
 
-    env = StreamExecutionEnvironment.get_execution_environment()
-    env.set_parallelism(1)
-    env.add_jars("file:///Users/Raghav/Desktop/DaftPunk/Resources/flink-sql-connector-kafka-1.17.1.jar")
-    # env.add_jars("file:///Users/karanbawejapro/Desktop/jarfiles/flink-sql-connector-kafka-1.17.1.jar")
-
-    print("Start reading data from kafka: ")
-    read_from_kafka(env)
+ds = env.add_source(kafka_consumer)
+ds.print()
+# env.set_parallelism(1)
+env.execute()
