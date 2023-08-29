@@ -9,13 +9,6 @@ env = StreamExecutionEnvironment.get_execution_environment()
 # env.add_jars("file:///Users/karanbawejapro/Desktop/jarfiles/flink-sql-connector-kafka-1.17.1.jar")
 env.add_jars("file:///Users/Raghav/Desktop/DaftPunk/Resources/flink-sql-connector-kafka-1.17.1.jar")
 
-# deserialization_schema = (
-#     JsonRowDeserializationSchema.builder().type_info(
-#         type_info=Types.ROW([Types.STRING(), Types.STRING(), Types.STRING()])
-#     )
-#     # .ignore_parse_errors()
-#     .build()
-# )
 
 kafka_consumer = FlinkKafkaConsumer(
     topics="mqtt-replay",
