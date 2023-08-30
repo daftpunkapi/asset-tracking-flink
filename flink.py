@@ -2,13 +2,15 @@ from pyflink.common.typeinfo import Types
 from pyflink.common import SimpleStringSchema
 from pyflink.datastream import StreamExecutionEnvironment
 from pyflink.datastream.connectors.kafka import FlinkKafkaConsumer
-from pyflink.datastream.formats.json import JsonRowDeserializationSchema
+from pyflink.datastream.window import TumblingProcessingTimeWindows
+
 import random
 
 env = StreamExecutionEnvironment.get_execution_environment()
+env.set_parallelism(3)
+
 # env.add_jars("file:///Users/karanbawejapro/Desktop/jarfiles/flink-sql-connector-kafka-1.17.1.jar")
 env.add_jars("file:///Users/Raghav/Desktop/DaftPunk/Resources/flink-sql-connector-kafka-1.17.1.jar")
-
 
 kafka_consumer = FlinkKafkaConsumer(
     topics="mqtt-replay",
@@ -22,5 +24,5 @@ kafka_consumer = FlinkKafkaConsumer(
 
 ds = env.add_source(kafka_consumer)
 ds.print()
-# env.set_parallelism(1)
+
 env.execute()
