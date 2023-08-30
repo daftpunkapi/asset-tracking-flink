@@ -56,7 +56,7 @@ def main():
         while True:
             # Poll for a message from the source topic
             msg = consumer.poll(1.0)
-            print(msg)
+            # print(msg)
             if msg is None:
                 continue
             if msg.error():
@@ -69,7 +69,7 @@ def main():
 
             # Stream the message to the destination topic
             try:
-                print(type(json.dumps(msg.value().decode("utf-8"))))
+                # print(type(json.dumps(msg.value().decode("utf-8"))))
                 producer.produce(
                     destination_topic,
                     key=msg.key(),
