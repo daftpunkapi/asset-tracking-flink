@@ -1,15 +1,17 @@
 from pyflink.table import EnvironmentSettings, TableEnvironment
 from pyflink.table.expressions import *
 
-def log_processing():
 
+def log_processing():
     env_settings = EnvironmentSettings.in_streaming_mode()
     t_env = TableEnvironment.create(env_settings)
-    t_env.get_config().set("pipeline.jars", "file:///Users/Raghav/Desktop/DaftPunk/Resources/flink-sql-connector-kafka-1.17.1.jar")
-    # t_env.get_config().set("pipeline.jars", "file:///Users/karanbawejapro/Desktop/jarfiles/flink-sql-connector-kafka-1.17.1.jar")
+    # t_env.get_config().set("pipeline.jars", "file:///Users/Raghav/Desktop/DaftPunk/Resources/flink-sql-connector-kafka-1.17.1.jar")
+    t_env.get_config().set(
+        "pipeline.jars",
+        "file:///Users/karanbawejapro/Desktop/jarfiles/flink-sql-connector-kafka-1.17.1.jar",
+    )
     t_env.get_config().set("table.exec.source.idle-timeout", "1000")
 
-    
     source_ddl = """
         CREATE TABLE gps_coords(
             lat FLOAT,
@@ -29,8 +31,8 @@ def log_processing():
             'json.ignore-parse-errors' = 'true',
             'format' = 'json'
         )
-        """    
-    
+        """
+
     window_sql = """
     INSERT INTO sink_kafka
     SELECT
@@ -63,12 +65,13 @@ def log_processing():
                 'format' = 'json'
             );
     """
-    
+
     t_env.execute_sql(source_ddl)
-    
+
     t_env.execute_sql(sink_kafka)
-     
+
     t_env.execute_sql(window_sql).wait()
-    
-if __name__ == '__main__':
+
+
+if __name__ == "__main__":
     log_processing()
