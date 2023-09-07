@@ -12,6 +12,8 @@ def log_processing():
     )
     t_env.get_config().set("table.exec.source.idle-timeout", "1000")
 
+# For Confluent Cloud connection to Flink --> check Slack for troubleshooting
+# JAAS config and other configs as per the source DDL below below
     source_ddl = """
         CREATE TABLE gps_coords(
             lat FLOAT,
@@ -22,14 +24,17 @@ def log_processing():
             WATERMARK FOR ts_ltz AS ts_ltz - INTERVAL '1' SECONDS
         ) WITH (
             'connector' = 'kafka',
-            'topic' = 'mqtt_mock',
-            'properties.bootstrap.servers' = 'localhost:9092',
+            'topic' = 'mqtt-data',
+            'properties.bootstrap.servers' = 'pkc-p11xm.us-east-1.aws.confluent.cloud:9092',
             'properties.group.id' = 'coords_group',
             'scan.startup.mode' = 'specific-offsets',
             'scan.startup.specific-offsets' = 'partition:0,offset:0',
             'json.fail-on-missing-field' = 'false',
             'json.ignore-parse-errors' = 'true',
-            'format' = 'json'
+            'format' = 'json',
+            'properties.security.protocol' = 'SASL_SSL',
+            'properties.sasl.mechanism' = 'PLAIN',
+            'properties.sasl.jaas.config' = 'org.apache.flink.kafka.shaded.org.apache.kafka.common.security.plain.PlainLoginModule required username="L55O2A25JWO7XUKI" password="8LUXrAJnTsFV4y2C55VuHWUrgIkkzZDNvZ7rbVncNOW8iHKCBcfD50b51LLMLTQJ";'
         )
         """
 
@@ -69,6 +74,8 @@ def log_processing():
     """
 
     t_env.execute_sql(source_ddl)
+    # tbl_coords = t_env.from_path('gps_coords')
+    # tbl_coords.execute().print()
 
     t_env.execute_sql(sink_kafka)
 
@@ -77,3 +84,4 @@ def log_processing():
 
 if __name__ == "__main__":
     log_processing()
+    
