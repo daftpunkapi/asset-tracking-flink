@@ -19,7 +19,7 @@ def log_processing():
             ts_coord BIGINT,
             clientId STRING,
             ts_ltz AS TO_TIMESTAMP_LTZ(ts_coord,3),
-            WATERMARK FOR ts_ltz AS ts_ltz - INTERVAL '5' SECONDS
+            WATERMARK FOR ts_ltz AS ts_ltz - INTERVAL '1' SECONDS
         ) WITH (
             'connector' = 'kafka',
             'topic' = 'mqtt_mock',
@@ -37,8 +37,9 @@ def log_processing():
     INSERT INTO sink_kafka
     SELECT
         clientId,
-        FIRST_VALUE(lat) OVER (PARTITION BY window_start, window_end ORDER BY ts_ltz) AS lat,
-        FIRST_VALUE(long) OVER (PARTITION BY window_start, window_end ORDER BY ts_ltz) AS long
+        window_start,
+        FIRST_VALUE(lat) OVER (PARTITION BY clientId, window_start ORDER BY ts_ltz) AS lat,
+        FIRST_VALUE(long) OVER (PARTITION BY clientId, window_start ORDER BY ts_ltz) AS long
     FROM (
         SELECT
             clientId,
@@ -56,6 +57,7 @@ def log_processing():
     sink_kafka = """
             CREATE TABLE sink_kafka (
                 clientId STRING,
+                window_start TIMESTAMP,
                 lat FLOAT,
                 long FLOAT
             ) WITH (
