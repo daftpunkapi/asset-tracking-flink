@@ -6,7 +6,7 @@ import requests
 
 # Define a Python function to calculate distance using the Google Maps API
 def calculate_eta(lat, lon):
-    api_key = "AIzaSyDoRTChdthZ1oHoTU2s-O_v1TATUsoPELk"
+    api_key = "INSERT_YOUR_API_KEY"
     url = f"https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins={lat},{lon}&destinations=28.5017325,77.1672616&key={api_key}"
     response = requests.get(url)
     data = response.json()
